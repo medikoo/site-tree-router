@@ -1,0 +1,35 @@
+{
+  "name": "site-tree-router",
+  "version": "0.0.0",
+  "description": "Router for site-tree view engine",
+  "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
+  "keywords": [
+    "view",
+    "site",
+    "tree",
+    "markup"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/medikoo/site-tree-router.git"
+  },
+  "dependencies": {
+    "es5-ext": "^0.10.7",
+    "controller-router": "git://github.com/medikoo/controller-router.git#b7172124127d4",
+    "site-tree": "git://github.com/medikoo/site-tree.git#cb41859764e5f"
+  },
+  "devDependencies": {
+    "class-list": "^0.1.1",
+    "domjs": "git://github.com/medikoo/domjs.git#960f5b9ae",
+    "jsdom": "^3.1.2",
+    "tad": "~0.2.1",
+    "xlint": "~0.2.1",
+    "xlint-jslint-medikoo": "~0.1.2"
+  },
+  "scripts": {
+    "lint": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --no-cache --no-stream",
+    "lint-console": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --watch",
+    "test": "node node_modules/tad/bin/tad"
+  },
+  "license": "MIT"
+}
