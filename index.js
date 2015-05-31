@@ -17,13 +17,14 @@ module.exports = function (viewMap, tree/*, options*/) {
 		var view;
 		if (viewConf.match && viewConf.view) {
 			// Dynamic path
-			view = viewConf.view;
+			view = ensureView(viewConf.view);
 			routes[path] = {
 				match: viewConf.match,
 				controller: function () { tree.load(view, this); }
 			};
 		} else {
 			// Static path
+			ensureView(viewConf);
 			routes[path] = function () { tree.load(viewConf, this); };
 		}
 	});
