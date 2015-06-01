@@ -12,19 +12,19 @@ module.exports = function (viewMap, tree/*, options*/) {
 	  , routes = create(null), router;
 
 	if (options.context != null) baseContext = ensureObject(options.context);
-	if (options.notFound != null) notFoundView = ensureView(options.notFound);
+	if (options.notFound != null) notFoundView = ensureView(options.notFound, tree);
 	forEach(viewMap, function (viewConf, path) {
 		var view;
 		if (viewConf.match && viewConf.view) {
 			// Dynamic path
-			view = ensureView(viewConf.view);
+			view = ensureView(viewConf.view, tree);
 			routes[path] = {
 				match: viewConf.match,
 				controller: function () { tree.load(view, this); }
 			};
 		} else {
 			// Static path
-			ensureView(viewConf);
+			ensureView(viewConf, tree);
 			routes[path] = function () { tree.load(viewConf, this); };
 		}
 	});
