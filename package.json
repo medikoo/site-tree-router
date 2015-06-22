@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "es5-ext": "^0.10.7",
-    "controller-router": "git://github.com/medikoo/controller-router.git#b7172124127d4",
-    "site-tree": "git://github.com/medikoo/site-tree.git#368e07e956c"
+    "controller-router": "git://github.com/medikoo/controller-router.git#941eb5961387d65",
+    "site-tree": "git://github.com/medikoo/site-tree.git#a07e0c13f90095a5383163e5c086823941244dc5"
   },
   "devDependencies": {
     "class-list": "^0.1.1",
