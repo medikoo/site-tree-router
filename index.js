@@ -8,13 +8,12 @@ var forEach        = require('es5-ext/object/for-each')
   , create = Object.create, stringify = JSON.stringify;
 
 module.exports = function (routesMap, siteTree/*, options*/) {
-	var options = Object(arguments[2]), baseContext, notFoundView
+	var options = Object(arguments[2]), notFoundView
 	  , routes = create(null), router, ensureView;
 	ensureObject(routesMap);
 	ensureSiteTree(siteTree);
 	ensureView = siteTree.constructor.ensureView.bind(siteTree.constructor);
 
-	if (options.context != null) baseContext = ensureObject(options.context);
 	if (options.notFound != null) notFoundView = ensureView(options.notFound);
 	forEach(routesMap, function (viewConf, path) {
 		var view;
@@ -33,11 +32,10 @@ module.exports = function (routesMap, siteTree/*, options*/) {
 	});
 	router = getRouter(routes);
 	return function (pathname) {
-		var result, context = baseContext ? create(baseContext) : {};
-		result = router.call(context, pathname);
+		var result = router.call(this, pathname);
 		if (result) return result;
 		if (!notFoundView) throw new Error(stringify(pathname) + ' route not found');
-		siteTree.load(notFoundView, context);
+		siteTree.load(notFoundView, result.context);
 		return result;
 	};
 };
