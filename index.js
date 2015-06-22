@@ -30,7 +30,7 @@ module.exports = function (routesMap, siteTree/*, options*/) {
 			routes[path] = function () { siteTree.load(viewConf, this); };
 		}
 	});
-	router = getRouter(routes);
+	router = getRouter(routes, options);
 	return function (pathname) {
 		var result = router.call(this, pathname);
 		if (result) return result;
