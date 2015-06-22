@@ -35,7 +35,7 @@ module.exports = function (routesMap, siteTree/*, options*/) {
 		var result = router.call(this, pathname);
 		if (result) return result;
 		if (!notFoundView) throw new Error(stringify(pathname) + ' route not found');
-		siteTree.load(notFoundView, result.context);
+		siteTree.load(notFoundView, result.event);
 		return result;
 	};
 };
