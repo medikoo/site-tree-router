@@ -1,13 +1,15 @@
 {
   "name": "site-tree-router",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Router for site-tree view engine",
   "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
   "keywords": [
     "view",
     "site",
     "tree",
-    "markup"
+    "router",
+    "url",
+    "controller-router"
   ],
   "repository": {
     "type": "git",
@@ -15,8 +17,8 @@
   },
   "dependencies": {
     "es5-ext": "^0.10.7",
-    "controller-router": "git://github.com/medikoo/controller-router.git#941eb5961387d65",
-    "site-tree": "git://github.com/medikoo/site-tree.git#a07e0c13f90095a5383163e5c086823941244dc5"
+    "controller-router": "1",
+    "site-tree": "1"
   },
   "devDependencies": {
     "class-list": "^0.1.1",
