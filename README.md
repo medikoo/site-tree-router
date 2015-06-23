@@ -12,7 +12,7 @@ var siteTree = new SiteTree(document);
 var router = getSiteTreeRouter({
 	// Map view nodes to urls
   '/': require('./homepage'),
-	'subpage': require('./subpage')
+  'subpage': require('./subpage')
 }, siteTree);
 
 // Route between pages with url router:
@@ -36,7 +36,7 @@ router('/');
 ```javascript
 var router = getSiteTreeRouter({
   '/': homepageView,
-	'subpage': subpageView
+  'subpage': subpageView
 }, siteTree);
 
 // Present homepage
@@ -47,7 +47,7 @@ Configures router, for provided _url: view_ map (`routes`), and siteTree instanc
 
 Supported options:
 
-- __notFound__ - view configuration, that should be used when route for provided url was not found. If not provided, router will crash when its invoked with unmatched path
+- __notFound__ - view which should be used when route for provided url was not found. If not provided, router will crash when its invoked with unmatched path
 
 Additionally all options as described in [controller-router](https://github.com/medikoo/controller-router#getrouterroutes-options) documentation, are supported.
 
