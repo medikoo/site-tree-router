@@ -4,7 +4,7 @@ var toArray  = require('es5-ext/array/to-array')
   , Domjs    = require('domjs')
   , SiteTree = require('site-tree');
 
-module.exports = function (t, a) {
+module.exports = function (T, a) {
 	var tree = new SiteTree(document), domjs = new Domjs(document), ns = domjs.ns
 	  , header, content, foo, bar, par, other, newcontent, partialContent = {}, router;
 
@@ -70,7 +70,7 @@ module.exports = function (t, a) {
 		return df;
 	} };
 
-	router = t({
+	router = new T({
 		'/': rootPage,
 		foo: page1,
 		'bar/foka': page2,
@@ -83,31 +83,31 @@ module.exports = function (t, a) {
 			view: page3
 		}
 	}, tree, { notFound: newpage });
-	router('/foo/');
+	router.route('/foo/');
 	a(foo.textContent, 'foo 1 foo 2', "Replace content #1");
 	a(bar.textContent, 'bar 1 bar 2', "Replace content #2");
 	a(partialContent.className, 'active', "Classname");
 	a(partialContent.textContent, 'prepended 1 prepended 2 melon appended 1 appended 2',
 		"Append/Prepend");
 
-	router('/miszka/1elo/');
+	router.route('/miszka/1elo/');
 	a.deep(toArray(content.childNodes), [par, other],
 		"Replace content (2 steps) #1");
 	a(other.textContent, 'other 1 other 2', "Replace content (2 steps) #2");
 
-	router('/bar/foka/');
+	router.route('/bar/foka/');
 	a(other.textContent, 'page2 other 1 page2 other 2', "Go back");
 
-	router('/marasdfa/');
+	router.route('/marasdfa/');
 	a.deep(toArray(document.body.childNodes), [newcontent], "Replace whole content");
 
-	router('/');
+	router.route('/');
 	a.deep(toArray(document.body.childNodes), [header, content, partialContent], "Reload home #1");
 	a.deep(toArray(content.childNodes), [foo, bar.parentNode], "Reload home #2");
 	a(partialContent.className, '');
 	a(partialContent.textContent, ' melon ', "Append/Prepend");
 
-	router('/foo/');
+	router.route('/foo/');
 	a(foo.textContent, 'foo 1 foo 2', "Replace content #1");
 	a(bar.textContent, 'bar 1 bar 2', "Replace content #2");
 	a(partialContent.className, 'active', "Classname");
