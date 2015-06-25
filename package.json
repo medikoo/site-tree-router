@@ -1,6 +1,6 @@
 {
   "name": "site-tree-router",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Router for site-tree view engine",
   "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
   "keywords": [
@@ -16,8 +16,9 @@
     "url": "git://github.com/medikoo/site-tree-router.git"
   },
   "dependencies": {
+    "d": "^0.1.1",
     "es5-ext": "^0.10.7",
-    "controller-router": "1",
+    "controller-router": "2",
     "site-tree": "1"
   },
   "devDependencies": {

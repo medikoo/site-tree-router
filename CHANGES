@@ -1,2 +1,6 @@
+v2.0.0  --  2015.06.25
+* Update to rely on v2 of ControllerRouter, convert utility into more natural
+  SiteTreeRouter class form
+
 v1.0.0  --  2015.06.23
 * Initial
