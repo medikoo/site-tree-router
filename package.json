@@ -20,7 +20,7 @@
     "d": "^1",
     "es5-ext": "^0.10.11",
     "is-promise": "^2.1",
-    "site-tree": "1"
+    "site-tree": "^1.1"
   },
   "devDependencies": {
     "domjs": "git://github.com/medikoo/domjs.git#51da87f4c2f719da453847e6cb2649fdfb4641e9",
