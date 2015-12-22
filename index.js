@@ -7,6 +7,7 @@ var ensureObject     = require('es5-ext/object/valid-object')
   , mixin            = require('es5-ext/object/mixin-prototypes')
   , normalizeOptions = require('es5-ext/object/normalize-options')
   , setPrototypeOf   = require('es5-ext/object/set-prototype-of')
+  , isPromise        = require('is-promise')
   , d                = require('d')
   , ControllerRouter = require('controller-router')
   , ensureSiteTree   = require('site-tree/ensure')
@@ -78,9 +79,13 @@ SiteTreeRouter.prototype = Object.create(ControllerRouter.prototype, {
 	constructor: d(SiteTreeRouter),
 	routeEvent: d(function (event, path/*, …controllerArgs*/) {
 		var result = routeEvent.apply(this, arguments);
-		if (result) return result;
-		if (!this.notFoundView) throw new Error(stringify(path) + ' route not found');
-		this.siteTree.load(this.notFoundView, event);
-		return result;
+		var handleResult = function () {
+			if (result) return result;
+			if (!this.notFoundView) throw new Error(stringify(path) + ' route not found');
+			this.siteTree.load(this.notFoundView, event);
+			return result;
+		}.bind(this);
+		if (!isPromise(result)) return handleResult();
+		return result.then(handleResult);
 	})
 });
