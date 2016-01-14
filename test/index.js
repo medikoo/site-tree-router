@@ -53,7 +53,7 @@ module.exports = function (T, a) {
 		par = df.appendChild(ns.p('Whatever'));
 		other = df.appendChild(ns.div({ id: 'other-content' },
 			ns.div('page2 other 1 '),
-			ns.div('page2 other 2')));
+			ns.div('page2 other 2 ' + this.eloma)));
 		return df;
 	} };
 
@@ -73,7 +73,10 @@ module.exports = function (T, a) {
 	router = new T({
 		'/': rootPage,
 		foo: page1,
-		'bar/foka': page2,
+		'bar/foka': {
+			decorateContext: function () { this.eloma = 'foogar'; },
+			view: page2
+		},
 		'miszka/[0-9][a-z]{3}': {
 			match: function (token) {
 				if (token !== '1elo') return false;
@@ -96,7 +99,7 @@ module.exports = function (T, a) {
 	a(other.textContent, 'other 1 other 2', "Replace content (2 steps) #2");
 
 	router.route('/bar/foka/');
-	a(other.textContent, 'page2 other 1 page2 other 2', "Go back");
+	a(other.textContent, 'page2 other 1 page2 other 2 foogar', "Go back");
 
 	router.route('/marasdfa/');
 	a.deep(toArray(document.body.childNodes), [newcontent], "Replace whole content");

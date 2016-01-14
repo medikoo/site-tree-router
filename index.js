@@ -2,7 +2,8 @@
 
 'use strict';
 
-var ensureObject     = require('es5-ext/object/valid-object')
+var ensureCallable   = require('es5-ext/object/valid-callable')
+  , ensureObject     = require('es5-ext/object/valid-object')
   , forEach          = require('es5-ext/object/for-each')
   , mixin            = require('es5-ext/object/mixin-prototypes')
   , normalizeOptions = require('es5-ext/object/normalize-options')
@@ -38,12 +39,17 @@ var SiteTreeRouter = module.exports = defineProperties(function (routes, siteTre
 		}
 		forEach(ensureObject(routes), function (conf, path) {
 			ensureObject(conf);
-			if (conf.match && conf.view) {
+			if (conf.view != null) {
 				if (ensureView) ensureView(conf.view);
-				dummyRoutes[path] = {
-					match: conf.match,
-					controller: Function.prototype
-				};
+				if (conf.decorateContext != null) ensureCallable(conf.decorateContext);
+				if (conf.match != null) {
+					dummyRoutes[path] = {
+						match: conf.match,
+						controller: Function.prototype
+					};
+				} else {
+					dummyRoutes[path] = Function.prototype;
+				}
 			} else {
 				ensureView(conf);
 				dummyRoutes[path] = Function.prototype;
@@ -56,13 +62,19 @@ var SiteTreeRouter = module.exports = defineProperties(function (routes, siteTre
 	normalizeRoutes: d(function (routes, options) {
 		var normalizedRoutes = create(null), siteTree = ensureSiteTree(ensureObject(options).siteTree);
 		forEach(routes, function (conf, path) {
-			var view;
-			if (conf.match && conf.view) {
+			var view, decorateContext;
+			if (conf.view) {
 				view = conf.view;
-				normalizedRoutes[path] = {
-					match: conf.match,
-					controller: function () { siteTree.load(view, this); }
-				};
+				if (conf.decorateContext) {
+					decorateContext = conf.decorateContext;
+					normalizedRoutes[path] = { controller: function () {
+						decorateContext.call(this);
+						siteTree.load(view, this);
+					} };
+				} else {
+					normalizedRoutes[path] = { controller: function () { siteTree.load(view, this); } };
+				}
+				if (conf.match) normalizedRoutes[path].match = conf.match;
 			} else {
 				view = conf;
 				normalizedRoutes[path] = function () { siteTree.load(view, this); };
