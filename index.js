@@ -91,13 +91,13 @@ SiteTreeRouter.prototype = Object.create(ControllerRouter.prototype, {
 	constructor: d(SiteTreeRouter),
 	routeEvent: d(function (event, path/*, …controllerArgs*/) {
 		var result = routeEvent.apply(this, arguments);
-		var handleResult = function () {
+		var handleResult = function (result) {
 			if (result) return result;
 			if (!this.notFoundView) throw new Error(stringify(path) + ' route not found');
 			this.siteTree.load(this.notFoundView, event);
 			return result;
 		}.bind(this);
-		if (!isPromise(result)) return handleResult();
+		if (!isPromise(result)) return handleResult(result);
 		return result.then(handleResult);
 	})
 });
