@@ -1,3 +1,8 @@
+v2.1.0  --  2017.03.20
+* Introduce `decorateContext` option
+* Fix handling of asynchronous route resolution
+* Update dependencies
+
 v2.0.0  --  2015.06.25
 * Update to rely on v2 of ControllerRouter, convert utility into more natural
   SiteTreeRouter class form
