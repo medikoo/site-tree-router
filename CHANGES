@@ -1,3 +1,6 @@
+v2.2.0  --  2017.03.27
+* `resolveView` option, through which view can be decided dynamically at resolution time
+
 v2.1.0  --  2017.03.20
 * Introduce `decorateContext` option
 * Fix handling of asynchronous route resolution
