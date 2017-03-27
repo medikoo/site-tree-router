@@ -64,6 +64,13 @@ module.exports = function (T, a) {
 		return df;
 	} };
 
+	var page4 = { _name: 'page4', _parent: page2, 'other-content': function () {
+		var df = document.createDocumentFragment();
+		df.appendChild(ns.div('other 1b '));
+		df.appendChild(ns.p('other 2b'));
+		return df;
+	} };
+
 	var newpage = { _name: 'newpage', _parent: rootPage, body: function () {
 		var df = document.createDocumentFragment();
 		newcontent = df.appendChild(ns.div());
@@ -84,6 +91,9 @@ module.exports = function (T, a) {
 				return true;
 			},
 			view: page3
+		},
+		'dynamic-view': {
+			resolveView: function () { return page4; }
 		}
 	}, tree, { notFound: newpage });
 	router.route('/foo/');
@@ -116,4 +126,9 @@ module.exports = function (T, a) {
 	a(partialContent.className, 'active', "Classname");
 	a(partialContent.textContent, 'prepended 1 prepended 2 melon appended 1 appended 2',
 		"Append/Prepend");
+
+	router.route('/dynamic-view/');
+	a.deep(toArray(content.childNodes), [par, other],
+		"Replace content (2 steps) #1");
+	a(other.textContent, 'other 1b other 2b', "Replace content (2 steps) #2");
 };

@@ -39,8 +39,12 @@ var SiteTreeRouter = module.exports = defineProperties(function (routes, siteTre
 		}
 		forEach(ensureObject(routes), function (conf, path) {
 			ensureObject(conf);
-			if (conf.view != null) {
-				if (ensureView) ensureView(conf.view);
+			if (conf.view || conf.resolveView) {
+				if (conf.view) {
+					if (ensureView) ensureView(conf.view);
+				} else {
+					ensureCallable(conf.resolveView);
+				}
 				if (conf.decorateContext != null) ensureCallable(conf.decorateContext);
 				if (conf.match != null) {
 					dummyRoutes[path] = {
@@ -62,22 +66,35 @@ var SiteTreeRouter = module.exports = defineProperties(function (routes, siteTre
 	normalizeRoutes: d(function (routes, options) {
 		var normalizedRoutes = create(null), siteTree = ensureSiteTree(ensureObject(options).siteTree);
 		forEach(routes, function (conf, path) {
-			var view, decorateContext;
-			if (conf.view) {
-				view = conf.view;
+			var staticView, resolveView, decorateContext, loadView;
+			if (conf.view || conf.resolveView) {
+				staticView = conf.view;
+				resolveView = conf.resolveView;
+				loadView = function () {
+					var view;
+					if (staticView) {
+						siteTree.load(staticView, this);
+						return;
+					}
+					view = resolveView.call(this);
+					if (isPromise(view)) {
+						return view.then(function (view) { siteTree.load(view, this); }.bind(this));
+					}
+					siteTree.load(view, this);
+				};
 				if (conf.decorateContext) {
 					decorateContext = conf.decorateContext;
 					normalizedRoutes[path] = { controller: function () {
 						decorateContext.call(this);
-						siteTree.load(view, this);
+						return loadView.call(this);
 					} };
 				} else {
-					normalizedRoutes[path] = { controller: function () { siteTree.load(view, this); } };
+					normalizedRoutes[path] = { controller: function () { return loadView.call(this); } };
 				}
 				if (conf.match) normalizedRoutes[path].match = conf.match;
 			} else {
-				view = conf;
-				normalizedRoutes[path] = function () { siteTree.load(view, this); };
+				staticView = conf;
+				normalizedRoutes[path] = function () { siteTree.load(staticView, this); };
 			}
 		});
 		return normalizedRoutes;
