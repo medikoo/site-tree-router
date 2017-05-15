@@ -9,3 +9,8 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * resolve controller with siteTree registered promises ([b3221db](https://github.com/medikoo/site-tree-router/commit/b3221db))
+
+
+## Old changelog
+
+Can be found at `CHANGES`
