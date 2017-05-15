@@ -2,7 +2,8 @@
 
 'use strict';
 
-var ensureCallable   = require('es5-ext/object/valid-callable')
+var constant         = require('es5-ext/function/constant')
+  , ensureCallable   = require('es5-ext/object/valid-callable')
   , ensureObject     = require('es5-ext/object/valid-object')
   , forEach          = require('es5-ext/object/for-each')
   , mixin            = require('es5-ext/object/mixin-prototypes')
@@ -16,6 +17,12 @@ var ensureCallable   = require('es5-ext/object/valid-callable')
   , create = Object.create, defineProperty = Object.defineProperty
   , defineProperties = Object.defineProperties, stringify = JSON.stringify
   , routeEvent = ControllerRouter.prototype.routeEvent;
+
+var resolveLoadResult = function (siteTree) {
+	var promises = siteTree.releasePromises(), promise = promises.shift(), nextPromise;
+	while ((nextPromise = promises.shift())) promise = promise.then(constant(nextPromise));
+	return promise;
+};
 
 var SiteTreeRouter = module.exports = defineProperties(function (routes, siteTree/*, options*/) {
 	var options;
@@ -74,13 +81,17 @@ var SiteTreeRouter = module.exports = defineProperties(function (routes, siteTre
 					var view;
 					if (staticView) {
 						siteTree.load(staticView, this);
-						return;
+						return resolveLoadResult(siteTree);
 					}
 					view = resolveView.call(this);
 					if (isPromise(view)) {
-						return view.then(function (view) { siteTree.load(view, this); }.bind(this));
+						return view.then(function (view) {
+							siteTree.load(view, this);
+							return resolveLoadResult(siteTree);
+						}.bind(this));
 					}
 					siteTree.load(view, this);
+					return resolveLoadResult(siteTree);
 				};
 				if (conf.decorateContext) {
 					decorateContext = conf.decorateContext;
@@ -94,7 +105,10 @@ var SiteTreeRouter = module.exports = defineProperties(function (routes, siteTre
 				if (conf.match) normalizedRoutes[path].match = conf.match;
 			} else {
 				staticView = conf;
-				normalizedRoutes[path] = function () { siteTree.load(staticView, this); };
+				normalizedRoutes[path] = function () {
+					siteTree.load(staticView, this);
+					return resolveLoadResult(siteTree);
+				};
 			}
 		});
 		return normalizedRoutes;
@@ -109,10 +123,12 @@ SiteTreeRouter.prototype = Object.create(ControllerRouter.prototype, {
 	routeEvent: d(function (event, path/*, …controllerArgs*/) {
 		var result = routeEvent.apply(this, arguments);
 		var handleResult = function (result) {
+			var loadResult;
 			if (result) return result;
 			if (!this.notFoundView) throw new Error(stringify(path) + ' route not found');
 			this.siteTree.load(this.notFoundView, event);
-			return result;
+			loadResult = resolveLoadResult(this.siteTree);
+			return loadResult ? loadResult.then(constant(result)) : result;
 		}.bind(this);
 		if (!isPromise(result)) return handleResult(result);
 		return result.then(handleResult);
