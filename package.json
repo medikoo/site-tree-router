@@ -20,7 +20,7 @@
     "d": "1",
     "es5-ext": "^0.10.14",
     "is-promise": "^2.1",
-    "site-tree": "^1.2"
+    "site-tree": "^1.4"
   },
   "devDependencies": {
     "domjs": "^0.3.1",
