@@ -3,6 +3,7 @@
 'use strict';
 
 var constant         = require('es5-ext/function/constant')
+  , assign           = require('es5-ext/object/assign')
   , ensureCallable   = require('es5-ext/object/valid-callable')
   , ensureObject     = require('es5-ext/object/valid-object')
   , forEach          = require('es5-ext/object/for-each')
@@ -11,6 +12,7 @@ var constant         = require('es5-ext/function/constant')
   , setPrototypeOf   = require('es5-ext/object/set-prototype-of')
   , isPromise        = require('is-promise')
   , d                = require('d')
+  , autoBind         = require('d/auto-bind')
   , ControllerRouter = require('controller-router')
   , ensureSiteTree   = require('site-tree/ensure')
 
@@ -118,8 +120,9 @@ var SiteTreeRouter = module.exports = defineProperties(function (routes, siteTre
 if (setPrototypeOf) setPrototypeOf(SiteTreeRouter, ControllerRouter);
 else mixin(SiteTreeRouter, ControllerRouter);
 
-SiteTreeRouter.prototype = Object.create(ControllerRouter.prototype, {
-	constructor: d(SiteTreeRouter),
+SiteTreeRouter.prototype = Object.create(ControllerRouter.prototype, assign({
+	constructor: d(SiteTreeRouter)
+}, autoBind({
 	routeEvent: d(function (event, path/*, …controllerArgs*/) {
 		var result = routeEvent.apply(this, arguments);
 		var handleResult = function (result) {
@@ -133,4 +136,4 @@ SiteTreeRouter.prototype = Object.create(ControllerRouter.prototype, {
 		if (!isPromise(result)) return handleResult(result);
 		return result.then(handleResult);
 	})
-});
+})));
