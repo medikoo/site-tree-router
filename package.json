@@ -16,14 +16,14 @@
     "url": "git://github.com/medikoo/site-tree-router.git"
   },
   "dependencies": {
-    "controller-router": "^3.3",
+    "controller-router": "^3.4",
     "d": "1",
-    "es5-ext": "^0.10.14",
+    "es5-ext": "^0.10.18",
     "is-promise": "^2.1",
     "site-tree": "^1.4"
   },
   "devDependencies": {
-    "domjs": "^0.3.1",
+    "domjs": "^0.3.2",
     "jsdom": "^9.12",
     "tad": "^0.2.7",
     "xlint": "^0.2.2",
